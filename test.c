@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     return -1;
   }
   // unsigned char *buf =NULL;
-  unsigned char buf[10] = {0};
+  unsigned char buf[1024] = {0};
   if (strcmp(argv[1], "-d") == 0) {
     if (argc != 3) {
       printf("invaild parameter \n");

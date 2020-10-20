@@ -47,10 +47,11 @@ int base64_encode(unsigned char *in, unsigned char *out, int out_len) {
   }
 
   //计算经过base64编码后的字符串长度
-  if (in_len % 3 == 0)
+  if (in_len % 3 == 0) {
     encode_len = in_len / 3 * 4;
-  else
+  } else {
     encode_len = (in_len / 3 + 1) * 4;
+  }
 
   if (out_len < encode_len) {
     printf("no enough buffer space \n");
@@ -61,18 +62,14 @@ int base64_encode(unsigned char *in, unsigned char *out, int out_len) {
   //以3个8位字符为一组进行编码
   int nloop = in_len % 3 == 0 ? in_len : in_len - 3;
   for (i = 0; i < nloop; i += 3) {
-    out[n] =
-        data_bin2ascii[in[i] >> 2]; //取出第一个字符的前6位并找出对应的结果字符
-    out[n + 1] = data_bin2ascii
-        [(in[i] & 0x3) << 4 |
-         (in[i + 1] >>
-          4)]; //将第一个字符的后位与第二个字符的前4位进行组合并找到对应的结果字符
-    out[n + 2] = data_bin2ascii
-        [(in[i + 1] & 0xf) << 2 |
-         (in[i + 2] >>
-          6)]; //将第二个字符的后4位与第三个字符的前2位组合并找出对应的结果字符
-    out[n + 3] =
-        data_bin2ascii[in[i + 2] & 0x3f]; //取出第三个字符的后6位并找出结果字符
+    //取出第一个字符的前6位并找出对应的结果字符
+    out[n] = data_bin2ascii[in[i] >> 2];
+    //将第一个字符的后位与第二个字符的前4位进行组合并找到对应的结果字符
+    out[n + 1] = data_bin2ascii[(in[i] & 0x3) << 4 | (in[i + 1] >> 4)];
+    //将第二个字符的后4位与第三个字符的前2位组合并找出对应的结果字符
+    out[n + 2] = data_bin2ascii[(in[i + 1] & 0xf) << 2 | (in[i + 2] >> 6)];
+    //取出第三个字符的后6位并找出结果字符
+    out[n + 3] = data_bin2ascii[in[i + 2] & 0x3f];
     n += 4;
   }
 
@@ -119,12 +116,13 @@ int base64_decode(unsigned char *in, unsigned char *out, int out_len) {
     return -1;
   }
   //判断编码后的字符串后是否有=
-  if (strstr(in, "=="))
+  if (strstr(in, "==")) {
     decode_len = in_len / 4 * 3 - 2;
-  else if (strstr(in, "="))
+  } else if (strstr(in, "=")) {
     decode_len = in_len / 4 * 3 - 1;
-  else
+  } else {
     decode_len = in_len / 4 * 3;
+  }
 
   if (out_len < decode_len) {
     printf("no enough buffer space \n");
